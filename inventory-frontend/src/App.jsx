@@ -1,11 +1,21 @@
-function App() {
+import {useState} from 'react';
+
+function App () {
+  const [nama, setNama] = useState('')
+
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-      <h1 className="text-4xl font-bold text-white">
-        Inventory Management System
-      </h1>
+    <div>
+        <h1>Inventory Management</h1>
+
+        <input
+          type="text"
+          value={nama}
+          onChange={(event) => setNama(event.target.value)}
+          placeholder="Enter your name"
+        />
+      <p>Halo, {nama}</p>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
