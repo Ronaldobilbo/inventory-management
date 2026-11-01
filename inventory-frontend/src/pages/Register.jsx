@@ -8,8 +8,14 @@ function Register () {
         name: '',
         email: '',
         password: '',
-        confirmPassword: ''
+        password_confirmation: ''
     });
+
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        console.log('Form submitted:', formData);
+    }
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/images/login.jpg')"}}>
@@ -17,7 +23,7 @@ function Register () {
             <div className="relative z-10 w-full max-w-md p-8 bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl">   
                 <h2 className="text-2xl text-center font-bold text-white mb-4">Register</h2>
                 <h4 className="text-center text-white/70 mb-6">Create a new account</h4>
-                <form action="" method="POST" className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <div className='relative mb-4'>
                         <label htmlFor="username" 
                             className="text-white">Name</label>
@@ -26,6 +32,7 @@ function Register () {
                             value={formData.name}
                             onChange={(e) => setFormData((prevData) => ({ ...prevData, name: e.target.value }))}
                             placeholder="Enter your Name"
+                            autoComplete="off"
                             className="block px-4 py-2 w-full text-white outline-none placeholder:text-white/70 border border-gray-300 
                             focus:ring-1 focus:ring-blue-500 focus:border-blue-500 shadow-md rounded-md" />
                     </div>
@@ -35,8 +42,9 @@ function Register () {
                             type="email" 
                             id="email" 
                             value={formData.email}
-                            onChange={(e) => setFormData({...formData, email: e.target.value})}
+                            onChange={(e) => setFormData((prevData) => ({ ...prevData, email: e.target.value}))}
                             placeholder="Enter your email" 
+                            autoComplete="off"
                             className="block px-4 py-2 w-full text-white outline-none placeholder:text-white/70 border border-gray-300 focus:ring-1
                              focus:ring-blue-500 focus:border-blue-500 shadow-md rounded-md" 
                         />
@@ -48,8 +56,9 @@ function Register () {
                                 type={seePassword ? "text" : "password"}
                                 id="password"
                                 value={formData.password}
-                                onChange={(e) => setFormData({...formData, password: e.target.value})}
+                                onChange={(e) => setFormData((prevData) => ({ ...prevData, password: e.target.value}))}
                                 placeholder="Enter your password"
+                                autoComplete="off"
                                 className="block px-4 py-2 pr-12 w-full text-white outline-none placeholder:text-white/70 border border-gray-300 focus:ring-1
                                  focus:ring-blue-500 focus:border-blue-500 shadow-md rounded-md"
                             />
@@ -70,9 +79,10 @@ function Register () {
                             <input 
                                 type={seeConfirmPassword ? "text" : "password"}
                                 id="confirm-password"
-                                value={formData.confirmPassword}
-                                onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                                value={formData.password_confirmation}
+                                onChange={(e) => setFormData((prevData) => ({ ...prevData, password_confirmation: e.target.value }))}
                                 placeholder="Confirm your password"
+                                autoComplete="off"
                                 className="block px-4 py-2 pr-12 w-full text-white outline-none
                                  placeholder:text-white/70 border border-gray-300 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 shadow-md rounded-md"
                             />
