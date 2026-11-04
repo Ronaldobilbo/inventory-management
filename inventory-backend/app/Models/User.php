@@ -31,6 +31,11 @@ class User extends Authenticatable
         ];
     }
 
+    public function customer()
+    {
+        return $this->hasOne(Customer::class);
+    }
+
     public function canAccessPanel(\Filament\Panel $panel): bool
     {
         return $this->role === 'admin';
