@@ -70,7 +70,7 @@ function Login () {
                     </div>
                     <button
                         type="submit"
-                        className="w-full bg-gray-700 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-gray-800 transition duration-300 ease-in-out transform"
+                        className="w-full bg-gray-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-gray-800 transition duration-500 ease-in-out"
                     >
                         Login
                     </button>
