@@ -12,6 +12,8 @@ function Register () {
         password: '',
         password_confirmation: ''
     });
+    const [registerError, setRegisterError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const passwordRequirements = [
         {
@@ -36,8 +38,11 @@ function Register () {
         }
     ]
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
+
+        setPasswordError('');
+        setRegisterError('');
 
         const allValid = passwordRequirements.every(requirement => requirement.valid);
 
@@ -51,7 +56,41 @@ function Register () {
             return;
         }
 
-        setPasswordError('');
+        try {
+            setIsLoading(true);
+
+            await api.get('/sanctum/csrf-cookie');
+
+            await api.post('/register', {
+                name: formData.name,
+                email: formData.email,
+                password: formData.password,
+                password_confirmation: formData.password_confirmation
+            });
+
+            // Redirect to login page after successful registration
+            window.location.href = '/login';
+
+        } catch (error) {
+
+            if (error.response?.data?.errors) {
+                const errors = error.response.data.errors;
+
+                setRegisterError(
+                    errors.email?.[0] ||
+                    errors.name?.[0] ||
+                    errors.password?.[0] ||
+                    'An error occurred while registering. Please try again.'
+                );
+            } else {
+                setRegisterError(
+                    'Unable to register. Please try again.'
+                );
+            }
+           
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (
@@ -70,6 +109,7 @@ function Register () {
                             onChange={(e) => setFormData((prevData) => ({ ...prevData, name: e.target.value }))}
                             placeholder="Enter your Name"
                             autoComplete="off"
+                            required
                             className="block px-3 py-2 mt-2 w-full text-white outline-none placeholder:text-white/70 border border-gray-300 
                             focus:ring-1 focus:ring-blue-500 focus:border-blue-500 shadow-md rounded-md" />
                     </div>
@@ -79,9 +119,16 @@ function Register () {
                             type="email" 
                             id="email" 
                             value={formData.email}
-                            onChange={(e) => setFormData((prevData) => ({ ...prevData, email: e.target.value}))}
+                            onChange={(e) => {
+                                setFormData((prevData) => ({ 
+                                    ...prevData,
+                                    email: e.target.value
+                                }));
+                                setRegisterError('');
+                            }}
                             placeholder="Enter your email" 
                             autoComplete="off"
+                            required
                             className="block px-3 py-2 mt-2 w-full text-white outline-none placeholder:text-white/70 border border-gray-300 focus:ring-1
                              focus:ring-blue-500 focus:border-blue-500 shadow-md rounded-md" 
                         />
@@ -105,6 +152,7 @@ function Register () {
                                 onChange={(e) => setFormData((prevData) => ({ ...prevData, password: e.target.value}))}
                                 placeholder="Enter your password"
                                 autoComplete="off"
+                                required
                                 className="block px-3 py-2 pr-12 w-full text-white outline-none placeholder:text-white/70 border border-gray-300 focus:ring-1
                                  focus:ring-blue-500 focus:border-blue-500 shadow-md rounded-md"
                             />
@@ -133,6 +181,7 @@ function Register () {
                                 }}
                                 placeholder="Confirm your password"
                                 autoComplete="off"
+                                required
                                 className="block px-3 py-2 pr-12 w-full text-white outline-none
                                  placeholder:text-white/70 border border-gray-300 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 shadow-md rounded-md"
                             />
@@ -152,10 +201,16 @@ function Register () {
                             {passwordError || '\u00A0'}
                         </p>
                     </div>
+                    {/* <div className="min-h-5 mt-1">
+                        <p className="text-xs text-red-500">
+                            {registerError || '\u00A0'}
+                        </p>
+                    </div> */}
                     <button 
                         type="submit" 
+                        disabled={isLoading}
                         className="w-full bg-gray-600 hover:bg-gray-800 text-white font-bold py-2 px-3 rounded transition duration-500 ease-in-out cursor-pointer">
-                        Register
+                        {isLoading ? 'Registering...' : 'Register'}
                     </button>
                     <p className="text-white text-sm mt-2 text-center">
                         Have an account? {''} <a href="/login" className="text-blue-500 hover:underline">Sign in</a>
